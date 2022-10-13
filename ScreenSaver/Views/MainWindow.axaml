@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ScreenSaver.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:ScreenSaver.Views"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ScreenSaver.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="ScreenSaver">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <DockPanel>
+        <Menu Name="MainMenu" DockPanel.Dock="Top" IsVisible="{Binding !IsFullScreen}" >
+            <MenuItem Header="_File">
+                <MenuItem Header="Sta_rt" HotKey="CTRL+R" InputGesture="CTRL+R" Command="{Binding StartCommand}" />
+                <MenuItem Header="Sto_p" HotKey="CTRL+P" InputGesture="CTRL+P" Command="{Binding StopCommand}" />
+                <Separator />
+                <MenuItem Header="E_xit" HotKey="CTRL+X" InputGesture="CTRL+X" Command="{Binding $parent[views:MainWindow].Close}" />
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="_Toggle Full Screen" HotKey="F11" InputGesture="F11" Command="{Binding ToggleFullScreenCommand}" />
+                <MenuItem Header="Show _Info" HotKey="CTRL+I" InputGesture="CTRL+I" Command="{Binding $parent[views:MainWindow].ShowInformationWindowCommand}" />
+            </MenuItem>
+        </Menu>
+        
+        <Canvas DockPanel.Dock="Bottom" Name="GameCanvas" Background="Green" />
+    </DockPanel>
+</Window>

@@ -1,0 +1,28 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ScreenSaver.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ScreenSaver.Views.InformationView"
+        Title="Information"
+        SizeToContent="WidthAndHeight">
+
+    <Design.DataContext>
+        <vm:InformationViewModel/>
+    </Design.DataContext>
+    
+    <Window.Styles>
+        <Style Selector="Grid TextBlock">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="MinWidth" Value="100" />
+        </Style>
+    </Window.Styles>
+    
+    <Border Margin="10" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="4">
+        <Grid ColumnDefinitions="Auto, *" >
+            <TextBlock Grid.Row="0" Grid.Column="0" >Is Running: </TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Engine.IsEnabled}" />
+        </Grid>
+    </Border>
+</Window>
