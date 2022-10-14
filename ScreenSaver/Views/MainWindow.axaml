@@ -16,8 +16,8 @@
     <DockPanel>
         <Menu Name="MainMenu" DockPanel.Dock="Top" IsVisible="{Binding !IsFullScreen}" >
             <MenuItem Header="_File">
-                <MenuItem Header="Sta_rt" HotKey="CTRL+R" InputGesture="CTRL+R" Command="{Binding StartCommand}" />
-                <MenuItem Header="Sto_p" HotKey="CTRL+P" InputGesture="CTRL+P" Command="{Binding StopCommand}" />
+                <MenuItem Header="Sta_rt" HotKey="CTRL+R" InputGesture="CTRL+R" Command="{Binding Engine.StartCommand}" />
+                <MenuItem Header="Sto_p" HotKey="CTRL+P" InputGesture="CTRL+P" Command="{Binding Engine.StopCommand}" />
                 <Separator />
                 <MenuItem Header="E_xit" HotKey="CTRL+X" InputGesture="CTRL+X" Command="{Binding $parent[views:MainWindow].Close}" />
             </MenuItem>
@@ -27,6 +27,8 @@
             </MenuItem>
         </Menu>
         
-        <Canvas DockPanel.Dock="Bottom" Name="GameCanvas" Background="Green" />
+        <views:SkiaImageView DockPanel.Dock="Bottom" Name="SkiaView">
+            <!-- insert game image here -->
+        </views:SkiaImageView>
     </DockPanel>
 </Window>

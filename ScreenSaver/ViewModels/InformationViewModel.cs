@@ -1,13 +1,16 @@
 using ReactiveUI.Fody.Helpers;
 using ScreenSaver.Game;
+using ScreenSaver.Game.Engines;
 
 namespace ScreenSaver.ViewModels
 {
     public class InformationViewModel : ViewModelBase
     {
-        [Reactive] public Engine Engine { get; set; }
+        [Reactive] public Engine Engine { get; set; } = new NullEngine();
 
-        public InformationViewModel(Engine engine)
+        public InformationViewModel() { }
+        
+        public InformationViewModel(Engine engine) : this()
         {
             Engine = engine;
         }

@@ -25,13 +25,13 @@ namespace ScreenSaver
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToTrace(LogEventLevel.Debug)
+                .LogToTrace()
                 .UseReactiveUI();
         
         private static void SetUpLogging()
         {
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
+                .MinimumLevel.Debug()
                 .WriteTo.Console()
                 .WriteTo.File(Settings.LogFile, rollingInterval: RollingInterval.Day)
                 .CreateLogger();

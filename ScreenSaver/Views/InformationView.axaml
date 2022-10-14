@@ -6,7 +6,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ScreenSaver.Views.InformationView"
         Title="Information"
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+        Topmost="True">
 
     <Design.DataContext>
         <vm:InformationViewModel/>
@@ -20,9 +21,36 @@
     </Window.Styles>
     
     <Border Margin="10" BorderBrush="Black" BorderThickness="2" CornerRadius="3" Padding="4">
-        <Grid ColumnDefinitions="Auto, *" >
-            <TextBlock Grid.Row="0" Grid.Column="0" >Is Running: </TextBlock>
-            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Engine.IsEnabled}" />
+        <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*" >
+            <TextBlock Grid.Row="0" Grid.Column="0">Engine: </TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Engine.EngineType}" />
+            
+            <TextBlock Grid.Row="1" Grid.Column="0">Is Running: </TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Engine.IsEnabled}" />
+            
+            <TextBlock Grid.Row="2" Grid.Column="0">Width: </TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Engine.Width}" />
+            
+            <TextBlock Grid.Row="3" Grid.Column="0">Height: </TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Engine.Height}" />
+            
+            <TextBlock Grid.Row="4" Grid.Column="0">Target Frame Rate: </TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Engine.TargetFrameRate}" />
+            
+            <TextBlock Grid.Row="5" Grid.Column="0">Ticks: </TextBlock>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding Engine.Ticks}" />
+            
+            <TextBlock Grid.Row="6" Grid.Column="0">FPS: </TextBlock>
+            <TextBlock Grid.Row="6" Grid.Column="1" Text="{Binding Engine.FPS}" />
+            
+            <TextBlock Grid.Row="7" Grid.Column="0">MinFPS: </TextBlock>
+            <TextBlock Grid.Row="7" Grid.Column="1" Text="{Binding Engine.MinFPS}" />
+            
+            <TextBlock Grid.Row="8" Grid.Column="0">MaxFPS: </TextBlock>
+            <TextBlock Grid.Row="8" Grid.Column="1" Text="{Binding Engine.MaxFPS}" />
+            
+            <TextBlock Grid.Row="9" Grid.Column="0">AverageFPS: </TextBlock>
+            <TextBlock Grid.Row="9" Grid.Column="1" Text="{Binding Engine.AverageFPS}" />
         </Grid>
     </Border>
 </Window>
