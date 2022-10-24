@@ -27,8 +27,6 @@
             </MenuItem>
         </Menu>
         
-        <views:SkiaImageView DockPanel.Dock="Bottom" Name="SkiaView">
-            <!-- insert game image here -->
-        </views:SkiaImageView>
+        <views:SkiaImageView DockPanel.Dock="Bottom" Name="SkiaView" SourceImage="{Binding Engine.Image}" />
     </DockPanel>
 </Window>

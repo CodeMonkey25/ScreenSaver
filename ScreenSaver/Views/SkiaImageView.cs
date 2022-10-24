@@ -12,9 +12,9 @@ namespace ScreenSaver.Views
 {
     public class SkiaImageView : ReactiveUserControl<SkiaImageViewModel>
     {
-        public static readonly StyledProperty<SKImage> SourceImageProperty = AvaloniaProperty.Register<SkiaImageView, SKImage>("SourceImage");
+        public static readonly StyledProperty<SKImage?> SourceImageProperty = AvaloniaProperty.Register<SkiaImageView, SKImage?>("SourceImage");
 
-        public SKImage SourceImage
+        public SKImage? SourceImage
         {
             get => GetValue(SourceImageProperty);
             set => SetValue(SourceImageProperty, value);
@@ -34,10 +34,10 @@ namespace ScreenSaver.Views
         
         private class ElementRenderOperation : ICustomDrawOperation
         {
-            private static readonly FormattedText NoEngine = new() { Text = "Current rendering API is not Skia", Typeface = Typeface.Default, FontSize = 50, };
-            private static readonly FormattedText NoImage = new() { Text = "No image has been provided", Typeface = Typeface.Default, FontSize = 50, };
+            private readonly IFormattedTextImpl _noEngine = new FormattedText() { Text = "Current rendering API is not Skia", Typeface = Typeface.Default, FontSize = 50, }.PlatformImpl;
+            private readonly IFormattedTextImpl _noImage = new FormattedText() { Text = "No image has been provided", Typeface = Typeface.Default, FontSize = 50, }.PlatformImpl;
 
-            public ElementRenderOperation(Rect bounds, SKImage sourceImage)
+            public ElementRenderOperation(Rect bounds, SKImage? sourceImage)
             {
                 Bounds = bounds;
                 SourceImage = sourceImage;
@@ -53,7 +53,7 @@ namespace ScreenSaver.Views
             /// </summary>
             public Rect Bounds { get; }
 
-            private SKImage SourceImage { get; }
+            private SKImage? SourceImage { get; }
             public bool HitTest(Point p) => false;
             public bool Equals(ICustomDrawOperation? other) => false;
 
@@ -61,7 +61,7 @@ namespace ScreenSaver.Views
             {
                 if (context is not ISkiaDrawingContextImpl skiaDrawingContextImpl)
                 {
-                    context.DrawText(Brushes.White, new Point(), NoEngine.PlatformImpl);
+                    context.DrawText(Brushes.White, new Point(), _noEngine);
                     return;
                 }
 
@@ -71,7 +71,7 @@ namespace ScreenSaver.Views
                 
                 if (SourceImage == null)
                 {
-                    context.DrawText(Brushes.White, new Point(), NoImage.PlatformImpl);
+                    context.DrawText(Brushes.White, new Point(), _noImage);
                     return;
                 }
 

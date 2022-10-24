@@ -4,6 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using ReactiveUI;
+using SkiaSharp;
 
 namespace ScreenSaver.Game.Engines
 {
@@ -53,11 +54,21 @@ namespace ScreenSaver.Game.Engines
             //     .Subscribe()
             //     .DisposeWith(_disposables);
         }
-        
+
         private void Tick(TimeSpan elapsedGameTime)
         {
-            UpdateStats(elapsedGameTime);
             // Debug.WriteLine($"{elapsedGameTime}");
+            UpdateStats(elapsedGameTime);
+            using (SKBitmap bitmap = new SKBitmap((int)Width, (int)Height))
+            using (SKCanvas canvas = new SKCanvas(bitmap))
+            {
+                canvas.Clear();
+                
+                CurrentGameView.HandleInput(elapsedGameTime);
+                CurrentGameView.Update(elapsedGameTime);
+                CurrentGameView.Draw(canvas);
+                Image = SKImage.FromBitmap(bitmap);
+            }
         }
 
         private void UpdateStats(TimeSpan elapsedGameTime)
