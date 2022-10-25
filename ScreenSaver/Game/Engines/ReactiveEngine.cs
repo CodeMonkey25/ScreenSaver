@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using ReactiveUI;
@@ -11,10 +10,9 @@ namespace ScreenSaver.Game.Engines
 {
     public class ReactiveEngine : Engine
     {
-        private const int ROLLING_SIZE = 60;
-        private readonly Queue<float> _rollingFPS = new(ROLLING_SIZE);
-
-        private Queue<SKBitmap> _freeBitmaps = new();
+        private const int FPSSampleSize = 60;
+        private readonly Queue<float> _rollingFPS = new(FPSSampleSize);
+        private readonly Queue<SKBitmap> _freeBitmaps = new();
 
         public ReactiveEngine()
         {
@@ -32,9 +30,6 @@ namespace ScreenSaver.Game.Engines
             
             this
                 .WhenAnyValue(x=>x.IsEnabled, x=>x.TargetFrameRate)
-                // .StartWith((false, 30d))
-                .SubscribeOn(NewThreadScheduler.Default)
-                .ObserveOn(NewThreadScheduler.Default)
                 .Select(t =>
                 {
                     (bool isEnabled, float frameRate) = t;
@@ -45,17 +40,10 @@ namespace ScreenSaver.Game.Engines
                         : Observable.Empty<TimeSpan>();
                 })
                 .Switch()
+                // .ObserveOn(RxApp.TaskpoolScheduler)
                 .Do(Tick)
                 .Subscribe()
                 .DisposeWith(Disposables);
-            
-            // Observable.Interval(TimeSpan.FromMilliseconds(1000d / DesiredFrameRate))
-            //     .TimeInterval()
-            //     .Where(_ => IsEnabled)
-            //     .Select(interval => (long)interval.Interval.TotalMilliseconds)
-            //     .Do(Tick)
-            //     .Subscribe()
-            //     .DisposeWith(_disposables);
         }
 
         #region Overrides
@@ -107,7 +95,7 @@ namespace ScreenSaver.Game.Engines
             ++Ticks;
             FPS = 1.0f / (float)elapsedGameTime.TotalSeconds;
 
-            while (ROLLING_SIZE <= _rollingFPS.Count)
+            while (FPSSampleSize <= _rollingFPS.Count)
             {
                 _rollingFPS.Dequeue();
             }

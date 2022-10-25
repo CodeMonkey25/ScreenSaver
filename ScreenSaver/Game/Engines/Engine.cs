@@ -3,6 +3,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using ScreenSaver.Examples.AfterDarkAquarium;
 using ScreenSaver.Game.Events;
 using ScreenSaver.Game.Views;
 using SkiaSharp;
@@ -27,7 +28,7 @@ namespace ScreenSaver.Game.Engines
         [Reactive] public int Width { get; set; }
         [Reactive] public int Height { get; set; }
 
-        [Reactive] public GameView CurrentGameView { get; protected set; } = NullGameView.Instance;
+        [Reactive] protected GameView CurrentGameView { get; set; } = new AquariumView(); // NullGameView.Instance;
         [Reactive] public SKImage? Image { get; protected set; }
         
         protected CompositeDisposable Disposables { get; } = new();

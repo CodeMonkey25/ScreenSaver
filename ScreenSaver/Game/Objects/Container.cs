@@ -10,6 +10,22 @@ namespace ScreenSaver.Game.Objects
         private readonly IList<IList<BaseObject>> _gameObjects = new List<IList<BaseObject>>();
         
         #region Overrides
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            foreach (IList<BaseObject> baseObjects in _gameObjects)
+            {
+                foreach (BaseObject baseObject in baseObjects)
+                {
+                    baseObject.Dispose();
+                }
+                baseObjects.Clear();
+            }
+            _gameObjects.Clear();
+        }
+
         public override bool Update(TimeSpan elapsedGameTime)
         {
             bool result = base.Update(elapsedGameTime);

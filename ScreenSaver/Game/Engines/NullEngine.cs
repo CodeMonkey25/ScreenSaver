@@ -4,7 +4,6 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using ReactiveUI;
 using ScreenSaver.Game.Views;
-using SkiaSharp;
 
 namespace ScreenSaver.Game.Engines
 {
