@@ -5,7 +5,7 @@ namespace ScreenSaver.ViewModels
 {
     public class InformationViewModel : ViewModelBase
     {
-        [Reactive] public Engine Engine { get; set; } = new NullEngine();
+        [Reactive] public Engine Engine { get; set; } = NullEngine.Instance;
 
         public InformationViewModel() { }
         

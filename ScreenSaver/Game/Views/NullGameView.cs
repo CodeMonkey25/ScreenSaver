@@ -1,3 +1,4 @@
+using System;
 using SkiaSharp;
 
 namespace ScreenSaver.Game.Views
@@ -7,12 +8,17 @@ namespace ScreenSaver.Game.Views
         public static NullGameView Instance { get; } = new();
         
         private NullGameView() {}
-        
+
+        public override bool Update(TimeSpan elapsedGameTime)
+        {
+            return base.Update(elapsedGameTime) || true;
+        }
+
         public override void Draw(SKCanvas canvas)
         {
             base.Draw(canvas);
             
-            using (SKPaint textPaint = new SKPaint { TextSize = 48, Color = SKColors.White })
+            using (SKPaint textPaint = new() { TextSize = 48, Color = SKColors.White })
             {
                 canvas.DrawText("No valid view loaded!", 50, 50, textPaint);
             }

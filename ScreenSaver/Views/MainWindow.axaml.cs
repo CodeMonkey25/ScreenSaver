@@ -75,7 +75,7 @@ namespace ScreenSaver.Views
             view.GetObservable(BoundsProperty)
                 .Do(rect =>
                 {
-                    if (ViewModel?.Engine is not ReactiveEngine engine)
+                    if (ViewModel?.Engine is not { } engine)
                     {
                         return;
                     }
@@ -98,7 +98,7 @@ namespace ScreenSaver.Views
             InfoWindow = new InformationView() { ViewModel = model, };
             InfoWindow.Closed += (_, _) =>
             {
-                InfoWindow.ViewModel.Engine = new NullEngine();
+                InfoWindow.ViewModel.Engine = NullEngine.Instance;
                 InfoWindow = null;
             };
             InfoWindow.Show(this);

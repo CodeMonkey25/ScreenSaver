@@ -8,11 +8,11 @@ namespace ScreenSaver.Game.Views
     {
         private readonly Container _gameObjects = new();
         
-        public override void Update(TimeSpan elapsedGameTime)
+        public override bool Update(TimeSpan elapsedGameTime)
         {
             base.Update(elapsedGameTime);
             
-            _gameObjects.Update(elapsedGameTime);
+            return _gameObjects.Update(elapsedGameTime);
         }
 
         public override void Draw(SKCanvas canvas)

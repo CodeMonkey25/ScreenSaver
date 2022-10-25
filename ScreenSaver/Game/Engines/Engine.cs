@@ -32,6 +32,11 @@ namespace ScreenSaver.Game.Engines
         
         protected CompositeDisposable Disposables { get; } = new();
         #endregion
+
+        protected Engine()
+        {
+            LoadGameState();
+        }
         
         #region Dispose
         protected virtual void Dispose(bool disposing)
@@ -59,8 +64,6 @@ namespace ScreenSaver.Game.Engines
 
         private void UnloadGameState()
         {
-            if (CurrentGameView is NullGameView) return;
-
             CurrentGameView.OnStateSwitched -= CurrentGameView_OnStateSwitched;
             CurrentGameView.OnEventNotification -= CurrentGameView_OnEventNotification;
             CurrentGameView.UnloadContent();
@@ -75,6 +78,24 @@ namespace ScreenSaver.Game.Engines
             CurrentGameView.OnStateSwitched += CurrentGameView_OnStateSwitched;
             CurrentGameView.OnEventNotification -= CurrentGameView_OnEventNotification;
             CurrentGameView.OnEventNotification += CurrentGameView_OnEventNotification;
+        }
+
+        protected void Render(int width, int height)
+        {
+            using (SKBitmap bitmap = new(Width, Height))
+            {
+                Render(bitmap);
+            }
+        }
+        
+        protected void Render(SKBitmap bitmap)
+        {
+            using (SKCanvas canvas = new(bitmap))
+            {
+                canvas.Clear(SKColors.Black);
+                CurrentGameView.Draw(canvas);
+                Image = SKImage.FromBitmap(bitmap);
+            }
         }
         #endregion
         

@@ -27,6 +27,6 @@
             </MenuItem>
         </Menu>
         
-        <views:SkiaImageView DockPanel.Dock="Bottom" Name="SkiaView" SourceImage="{Binding Engine.Image}" />
+        <views:SkiaImageView DockPanel.Dock="Bottom" Name="SkiaView" SourceImage="{Binding Engine.Image, Mode=OneWay}" />
     </DockPanel>
 </Window>

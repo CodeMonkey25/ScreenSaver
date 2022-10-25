@@ -10,14 +10,17 @@ namespace ScreenSaver.Game.Objects
         private readonly IList<IList<BaseObject>> _gameObjects = new List<IList<BaseObject>>();
         
         #region Overrides
-        public override void Update(TimeSpan elapsedGameTime)
+        public override bool Update(TimeSpan elapsedGameTime)
         {
-            base.Update(elapsedGameTime);
+            bool result = base.Update(elapsedGameTime);
             
             foreach (BaseObject gameObject in _gameObjects.SelectMany(go => go))
             {
-                gameObject.Update(elapsedGameTime);
+                if (gameObject.Update(elapsedGameTime))
+                    result = true;
             }
+
+            return result;
         }
 
         public override void Draw(SKCanvas canvas)

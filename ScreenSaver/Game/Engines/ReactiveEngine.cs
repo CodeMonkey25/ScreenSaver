@@ -58,21 +58,28 @@ namespace ScreenSaver.Game.Engines
             //     .DisposeWith(_disposables);
         }
 
+        #region Overrides
+        protected override void Dispose(bool disposing)
+        {
+            foreach (SKBitmap freeBitmap in _freeBitmaps)
+            {
+                freeBitmap.Dispose();
+            }
+            _freeBitmaps.Clear();
+            
+            base.Dispose(disposing);
+        }
+        #endregion
+        
         private void Tick(TimeSpan elapsedGameTime)
         {
-            // Debug.WriteLine($"{elapsedGameTime}");
             UpdateStats(elapsedGameTime);
 
-            SKBitmap bitmap = GetBitmap();
-            using (SKCanvas canvas = new(bitmap))
+            CurrentGameView.HandleInput(elapsedGameTime);
+            if (CurrentGameView.Update(elapsedGameTime))
             {
-                canvas.Clear(SKColors.Black);
-                
-                CurrentGameView.HandleInput(elapsedGameTime);
-                CurrentGameView.Update(elapsedGameTime);
-                CurrentGameView.Draw(canvas);
-
-                Image = SKImage.FromBitmap(bitmap);
+                SKBitmap bitmap = GetBitmap();
+                Render(bitmap);
                 ReleaseBitmap(bitmap);
             }
         }

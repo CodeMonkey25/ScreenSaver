@@ -15,8 +15,8 @@ namespace ScreenSaver.Game.Views
         public virtual void LoadContent() { }
 
         public virtual void UnloadContent() { }
-        
-        public virtual void Update(TimeSpan elapsedGameTime) { }
+
+        public virtual bool Update(TimeSpan elapsedGameTime) { return false; }
 
         public virtual void Draw(SKCanvas canvas) { }
         

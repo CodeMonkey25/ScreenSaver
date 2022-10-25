@@ -9,7 +9,7 @@ namespace ScreenSaver.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         [Reactive] public bool IsFullScreen { get; private set; }
-        [Reactive] internal Engine Engine { get; private set; } = new NullEngine();
+        [Reactive] internal Engine Engine { get; private set; } = NullEngine.Instance;
         [Reactive] public ReactiveCommand<Unit, Unit> ToggleFullScreenCommand { get; private set; } = null!;
 
         public MainWindowViewModel()
