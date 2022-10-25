@@ -1,19 +1,21 @@
-using System.Drawing;
-using ScreenSaver.Game.Objects;
+using SkiaSharp;
 
 namespace ScreenSaver.Game.Views
 {
     public class NullGameView : GameView
     {
-        public NullGameView()
+        public static NullGameView Instance { get; } = new();
+        
+        private NullGameView() {}
+        
+        public override void Draw(SKCanvas canvas)
         {
-            AddGameObject(
-                new TextObject()
-                {
-                    Text = "No valid view loaded!",
-                    Bounds = new Rectangle(50, 50, 100, 100),
-                }
-            );
+            base.Draw(canvas);
+            
+            using (SKPaint textPaint = new SKPaint { TextSize = 48, Color = SKColors.White })
+            {
+                canvas.DrawText("No valid view loaded!", 50, 50, textPaint);
+            }
         }
     }
 }

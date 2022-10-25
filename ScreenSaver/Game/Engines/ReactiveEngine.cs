@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
@@ -12,7 +13,9 @@ namespace ScreenSaver.Game.Engines
     {
         private const int ROLLING_SIZE = 60;
         private readonly Queue<float> _rollingFPS = new(ROLLING_SIZE);
-        
+
+        private Queue<SKBitmap> _freeBitmaps = new();
+
         public ReactiveEngine()
         {
             TargetFrameRate = 30f;
@@ -59,18 +62,39 @@ namespace ScreenSaver.Game.Engines
         {
             // Debug.WriteLine($"{elapsedGameTime}");
             UpdateStats(elapsedGameTime);
-            using (SKBitmap bitmap = new SKBitmap((int)Width, (int)Height))
-            using (SKCanvas canvas = new SKCanvas(bitmap))
+
+            SKBitmap bitmap = GetBitmap();
+            using (SKCanvas canvas = new(bitmap))
             {
-                canvas.Clear();
+                canvas.Clear(SKColors.Black);
                 
                 CurrentGameView.HandleInput(elapsedGameTime);
                 CurrentGameView.Update(elapsedGameTime);
                 CurrentGameView.Draw(canvas);
+
                 Image = SKImage.FromBitmap(bitmap);
+                ReleaseBitmap(bitmap);
             }
         }
 
+        private SKBitmap GetBitmap()
+        {
+            while (_freeBitmaps.Any())
+            {
+                SKBitmap bitmap = _freeBitmaps.Dequeue();
+                if (bitmap.Width == Width && bitmap.Height == Height)
+                    return bitmap;
+                bitmap.Dispose();
+            }
+
+            return new SKBitmap(Width, Height);
+        }
+
+        private void ReleaseBitmap(SKBitmap bitmap)
+        {
+            _freeBitmaps.Enqueue(bitmap);
+        }
+        
         private void UpdateStats(TimeSpan elapsedGameTime)
         {
             ++Ticks;

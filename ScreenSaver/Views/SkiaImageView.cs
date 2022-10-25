@@ -74,7 +74,7 @@ namespace ScreenSaver.Views
                     context.DrawText(Brushes.White, new Point(), _noImage);
                     return;
                 }
-
+                
                 canvas.DrawImage(SourceImage, 0, 0);
             }
         }

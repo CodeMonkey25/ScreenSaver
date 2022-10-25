@@ -2,7 +2,7 @@ using SkiaSharp;
 
 namespace ScreenSaver.Game.Objects
 {
-    public class TextObject : GameObject
+    public class TextObject : BaseObject
     {
         public string Text { get; set; } = string.Empty;
 

@@ -11,8 +11,7 @@ namespace ScreenSaver.Game.Engines
 {
     public abstract class Engine : ReactiveObject, IDisposable
     {
-        protected CompositeDisposable Disposables { get; } = new();
-
+        #region Properties
         public string EngineType => GetType().Name;
         
         [Reactive] public ReactiveCommand<Unit, Unit> StartCommand { get; protected set; } = null!;
@@ -25,12 +24,16 @@ namespace ScreenSaver.Game.Engines
         [Reactive] public float MaxFPS { get; protected set; }
         [Reactive] public float AverageFPS { get; protected set; }
         
-        [Reactive] public double Width { get; set; }
-        [Reactive] public double Height { get; set; }
+        [Reactive] public int Width { get; set; }
+        [Reactive] public int Height { get; set; }
 
-        [Reactive] public GameView CurrentGameView { get; protected set; } = new NullGameView();
+        [Reactive] public GameView CurrentGameView { get; protected set; } = NullGameView.Instance;
         [Reactive] public SKImage? Image { get; protected set; }
         
+        protected CompositeDisposable Disposables { get; } = new();
+        #endregion
+        
+        #region Dispose
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -44,7 +47,9 @@ namespace ScreenSaver.Game.Engines
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+        #endregion
         
+        #region GameView
         public void SwitchGameState(GameView gameView)
         {
             UnloadGameState();
@@ -59,7 +64,7 @@ namespace ScreenSaver.Game.Engines
             CurrentGameView.OnStateSwitched -= CurrentGameView_OnStateSwitched;
             CurrentGameView.OnEventNotification -= CurrentGameView_OnEventNotification;
             CurrentGameView.UnloadContent();
-            CurrentGameView = new NullGameView();
+            CurrentGameView = NullGameView.Instance;
         }
 
         private void LoadGameState()
@@ -71,6 +76,7 @@ namespace ScreenSaver.Game.Engines
             CurrentGameView.OnEventNotification -= CurrentGameView_OnEventNotification;
             CurrentGameView.OnEventNotification += CurrentGameView_OnEventNotification;
         }
+        #endregion
         
         #region Events
         private void CurrentGameView_OnStateSwitched(object? sender, GameView e)

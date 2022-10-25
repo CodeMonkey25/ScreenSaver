@@ -1,5 +1,4 @@
 using ReactiveUI.Fody.Helpers;
-using ScreenSaver.Game;
 using ScreenSaver.Game.Engines;
 
 namespace ScreenSaver.ViewModels

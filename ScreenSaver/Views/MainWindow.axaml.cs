@@ -80,8 +80,8 @@ namespace ScreenSaver.Views
                         return;
                     }
 
-                    engine.Width = rect.Width;
-                    engine.Height = rect.Height;
+                    engine.Width = (int)rect.Width;
+                    engine.Height = (int)rect.Height;
                 })
                 .Subscribe()
                 .DisposeWith(disposables);
