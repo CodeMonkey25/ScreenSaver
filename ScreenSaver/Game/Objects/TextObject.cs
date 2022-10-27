@@ -12,7 +12,7 @@ namespace ScreenSaver.Game.Objects
 
             using (SKPaint textPaint = new() { TextSize = 48, Color = SKColors.White })
             {
-                canvas.DrawText(Text, Bounds.X, Bounds.Y, textPaint);
+                canvas.DrawText(Text, X, Y, textPaint);
             }
         }
 

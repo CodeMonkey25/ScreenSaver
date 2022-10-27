@@ -13,7 +13,7 @@ namespace ScreenSaver.Game.Engines
         private const int FPSSampleSize = 60;
         private readonly Queue<float> _rollingFPS = new(FPSSampleSize);
         private readonly Queue<SKBitmap> _freeBitmaps = new();
-
+        
         public ReactiveEngine()
         {
             TargetFrameRate = 30f;
@@ -63,8 +63,12 @@ namespace ScreenSaver.Game.Engines
         {
             UpdateStats(elapsedGameTime);
 
-            CurrentGameView.HandleInput(elapsedGameTime);
-            if (CurrentGameView.Update(elapsedGameTime))
+            Jeeves.ScreenHeight = Jeeves.ParentHeight = Height;
+            Jeeves.ScreenWidth = Jeeves.ParentWidth = Width;
+            Jeeves.ElapsedGameTime = elapsedGameTime;
+            
+            CurrentGameView.HandleInput(Jeeves);
+            if (CurrentGameView.Update(Jeeves))
             {
                 SKBitmap bitmap = GetBitmap();
                 Render(bitmap);

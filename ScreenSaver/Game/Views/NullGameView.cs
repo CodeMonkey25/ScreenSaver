@@ -1,4 +1,4 @@
-using System;
+using ScreenSaver.Game.Engines;
 using SkiaSharp;
 
 namespace ScreenSaver.Game.Views
@@ -9,9 +9,9 @@ namespace ScreenSaver.Game.Views
         
         private NullGameView() {}
 
-        public override bool Update(TimeSpan elapsedGameTime)
+        public override bool Update(Jeeves jeeves)
         {
-            return base.Update(elapsedGameTime) || true;
+            return base.Update(jeeves) || true;
         }
 
         public override void Draw(SKCanvas canvas)

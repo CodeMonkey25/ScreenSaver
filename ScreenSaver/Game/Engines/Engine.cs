@@ -32,11 +32,13 @@ namespace ScreenSaver.Game.Engines
         [Reactive] public SKImage? Image { get; protected set; }
         
         protected CompositeDisposable Disposables { get; } = new();
+        protected Jeeves Jeeves { get; } = new();
         #endregion
 
         protected Engine()
         {
             LoadGameState();
+            Jeeves.DisposeWith(Disposables);
         }
         
         #region Dispose
@@ -67,14 +69,14 @@ namespace ScreenSaver.Game.Engines
         {
             CurrentGameView.OnStateSwitched -= CurrentGameView_OnStateSwitched;
             CurrentGameView.OnEventNotification -= CurrentGameView_OnEventNotification;
-            CurrentGameView.UnloadContent();
+            CurrentGameView.UnloadContent(Jeeves);
             CurrentGameView = NullGameView.Instance;
         }
 
         private void LoadGameState()
         {
-            CurrentGameView.Initialize();
-            CurrentGameView.LoadContent();
+            CurrentGameView.Initialize(Jeeves);
+            CurrentGameView.LoadContent(Jeeves);
             CurrentGameView.OnStateSwitched -= CurrentGameView_OnStateSwitched;
             CurrentGameView.OnStateSwitched += CurrentGameView_OnStateSwitched;
             CurrentGameView.OnEventNotification -= CurrentGameView_OnEventNotification;
@@ -83,7 +85,7 @@ namespace ScreenSaver.Game.Engines
 
         protected void Render(int width, int height)
         {
-            using (SKBitmap bitmap = new(Width, Height))
+            using (SKBitmap bitmap = new(width, height))
             {
                 Render(bitmap);
             }

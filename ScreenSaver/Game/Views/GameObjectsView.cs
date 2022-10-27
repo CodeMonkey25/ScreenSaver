@@ -1,4 +1,4 @@
-using System;
+using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Objects;
 using SkiaSharp;
 
@@ -8,11 +8,14 @@ namespace ScreenSaver.Game.Views
     {
         private readonly Container _gameObjects = new();
         
-        public override bool Update(TimeSpan elapsedGameTime)
+        public override bool Update(Jeeves jeeves)
         {
-            base.Update(elapsedGameTime);
+            base.Update(jeeves);
+
+            _gameObjects.Width = jeeves.ScreenWidth;
+            _gameObjects.Height = jeeves.ScreenHeight;
             
-            return _gameObjects.Update(elapsedGameTime);
+            return _gameObjects.Update(jeeves);
         }
 
         public override void Draw(SKCanvas canvas)

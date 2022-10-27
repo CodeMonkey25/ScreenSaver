@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using ScreenSaver.Game.Engines;
 using SkiaSharp;
 
 namespace ScreenSaver.Game.Objects
@@ -26,13 +26,15 @@ namespace ScreenSaver.Game.Objects
             _gameObjects.Clear();
         }
 
-        public override bool Update(TimeSpan elapsedGameTime)
+        public override bool Update(Jeeves jeeves)
         {
-            bool result = base.Update(elapsedGameTime);
-            
+            bool result = base.Update(jeeves);
+
             foreach (BaseObject gameObject in _gameObjects.SelectMany(go => go))
             {
-                if (gameObject.Update(elapsedGameTime))
+                jeeves.ParentWidth = Width;
+                jeeves.ParentHeight = Height;
+                if (gameObject.Update(jeeves))
                     result = true;
             }
 
@@ -52,17 +54,17 @@ namespace ScreenSaver.Game.Objects
         
         public void Add(BaseObject baseObject)
         {
-            while (_gameObjects.Count <= baseObject.ZIndex)
+            while (_gameObjects.Count <= baseObject.Z)
             {
                 _gameObjects.Add(new List<BaseObject>());
             }
         
-            _gameObjects[baseObject.ZIndex].Add(baseObject);
+            _gameObjects[baseObject.Z].Add(baseObject);
         }
 
         public void Remove(BaseObject baseObject)
         {
-            _gameObjects[baseObject.ZIndex].Remove(baseObject);
+            _gameObjects[baseObject.Z].Remove(baseObject);
         }
     }
 }
