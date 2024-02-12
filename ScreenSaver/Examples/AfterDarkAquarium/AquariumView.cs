@@ -47,15 +47,12 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
 
         private void LoadBitmaps<T>(Jeeves jeeves, IEnumerable<(T key, string fileName)> bitmaps ) where T : Enum
         {
-            IAssetLoader? assets = AvaloniaLocator.Current.GetService<IAssetLoader>();
-            if (assets == null) return;
-            
             string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
             foreach ((T key, string fileName) in bitmaps)
             {
                 jeeves.AddBitmap<AquariumView, T>(
                     key, 
-                    SKBitmap.Decode(assets.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}")))
+                    SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}")))
                 );
             }
         }

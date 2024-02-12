@@ -1,3 +1,4 @@
+using System.Globalization;
 using Avalonia;
 using Avalonia.Media;
 using Avalonia.Platform;
@@ -34,8 +35,8 @@ namespace ScreenSaver.Views
         
         private class ElementRenderOperation : ICustomDrawOperation
         {
-            private readonly IFormattedTextImpl _noEngine = new FormattedText() { Text = "Current rendering API is not Skia", Typeface = Typeface.Default, FontSize = 50, }.PlatformImpl;
-            private readonly IFormattedTextImpl _noImage = new FormattedText() { Text = "No image has been provided", Typeface = Typeface.Default, FontSize = 50, }.PlatformImpl;
+            // private readonly FormattedText _noEngine = new FormattedText("Current rendering API is not Skia", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 50, null);
+            // private readonly IFormattedTextImpl _noImage = new FormattedText("No image has been provided", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 50, null).PlatformImpl;
 
             public ElementRenderOperation(Rect bounds, SKImage? sourceImage)
             {
@@ -57,25 +58,28 @@ namespace ScreenSaver.Views
             public bool HitTest(Point p) => false;
             public bool Equals(ICustomDrawOperation? other) => false;
 
-            public void Render(IDrawingContextImpl context)
+            public void Render(ImmediateDrawingContext context)
             {
-                if (context is not ISkiaDrawingContextImpl skiaDrawingContextImpl)
+                ISkiaSharpApiLeaseFeature? skia = context.TryGetFeature<ISkiaSharpApiLeaseFeature>();
+                if (skia is null)
                 {
-                    context.DrawText(Brushes.White, new Point(), _noEngine);
+                    // context.DrawText(Brushes.White, new Point(), _noEngine);
                     return;
                 }
 
-                SKCanvas canvas = skiaDrawingContextImpl.SkCanvas;
-                canvas.Clear(SKColors.Black);
-                // canvas.ClipRect(SKRect.Create((float)Bounds.Width, (float)Bounds.Height));
-                
-                if (SourceImage == null)
+                using (ISkiaSharpApiLease lease = skia.Lease())
                 {
-                    context.DrawText(Brushes.White, new Point(), _noImage);
-                    return;
+                    SKCanvas canvas = lease.SkCanvas;
+                    canvas.Clear(SKColors.Black);
+
+                    if (SourceImage == null)
+                    {
+                        canvas.DrawText("No image has been provided", 0, 0, new SKPaint(new SKFont(SKTypeface.Default, 50)));
+                        return;
+                    }
+
+                    canvas.DrawImage(SourceImage, 0, 0);
                 }
-                
-                canvas.DrawImage(SourceImage, 0, 0);
             }
         }
     }

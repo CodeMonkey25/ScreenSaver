@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using ScreenSaver.Game.Engines;
 using SkiaSharp;
 
