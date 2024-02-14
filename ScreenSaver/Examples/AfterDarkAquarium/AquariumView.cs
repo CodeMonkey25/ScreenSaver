@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Avalonia;
 using Avalonia.Platform;
 using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Views;
@@ -37,8 +36,6 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             LoadBitmaps(jeeves, bitmaps);
             
             Add(jeeves.RetrieveObject<AquariumView, SeaFloor>());
-            // Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
-            // Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
         }
 
         public override void UnloadContent(Jeeves jeeves)
@@ -52,6 +49,10 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             if (jeeves.Random.Next(0, 500) == 0)
             {
                 Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
+            }
+            if (jeeves.Random.Next(0, 250) == 0)
+            {
+                Add(jeeves.RetrieveObject<AquariumView, Fish>());
             }
             return base.Update(jeeves);
         }

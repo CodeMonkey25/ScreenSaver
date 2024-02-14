@@ -2,7 +2,6 @@
 using System.Reactive.Disposables;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using ScreenSaver.Examples.AfterDarkAquarium;
 using ScreenSaver.Game.Engines;
 
 namespace ScreenSaver.ViewModels

@@ -3,7 +3,6 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
-using ScreenSaver.Examples.AfterDarkAquarium;
 using ScreenSaver.Game.Events;
 using ScreenSaver.Game.Views;
 using SkiaSharp;

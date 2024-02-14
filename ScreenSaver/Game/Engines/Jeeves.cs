@@ -16,49 +16,49 @@ namespace ScreenSaver.Game.Engines
         public TimeSpan ElapsedGameTime { get; set; }
         public Random Random { get; } = new Random();
 
-        private readonly Dictionary<Type, ViewStash> Stash = new();
+        private readonly Dictionary<Type, ViewStash> _stash = new();
 
         public void Dispose()
         {
-            foreach (IDisposable viewStash in Stash.Values)
+            foreach (IDisposable viewStash in _stash.Values)
             {
                 viewStash.Dispose();
             }
-            Stash.Clear();
+            _stash.Clear();
         }
         
         public void Prepare<T1>() where T1 : GameView
         {
-            Stash.Add(typeof(T1), new ViewStash());
+            _stash.Add(typeof(T1), new ViewStash());
         }
         
         public void CleanUp<T>() where T : GameView
         {
             Type typeKey = typeof(T);
-            if (Stash.ContainsKey(typeKey))
+            if (_stash.ContainsKey(typeKey))
             {
-                Stash[typeKey].Dispose();
-                Stash.Remove(typeKey);
+                _stash[typeKey].Dispose();
+                _stash.Remove(typeKey);
             }
         }
         
         public void AddBitmap<T1, T2>(T2 key, SKBitmap bitmap) where T1 : GameView where T2 : Enum
         {
             Type typeKey = typeof(T1);
-            if (!Stash.ContainsKey(typeKey))
+            if (!_stash.ContainsKey(typeKey))
             {
-                Stash.Add(typeKey, new ViewStash());
+                _stash.Add(typeKey, new ViewStash());
             }
 
-            Stash[typeKey].AddBitmap(key, bitmap);
+            _stash[typeKey].AddBitmap(key, bitmap);
         }
 
         public SKBitmap RetrieveBitmap<T1, T2>(T2 key) where T1 : GameView where T2 : Enum
         {
             Type typeKey = typeof(T1);
-            if (Stash.ContainsKey(typeKey))
+            if (_stash.ContainsKey(typeKey))
             {
-                return Stash[typeKey].RetrieveBitmap(key);
+                return _stash[typeKey].RetrieveBitmap(key);
             }
 
             throw new GameException($"Unknown bitmap for View {typeKey.Name} - Key {key}");
@@ -67,9 +67,9 @@ namespace ScreenSaver.Game.Engines
         public T2 RetrieveObject<T1, T2>() where T1 : GameView where T2 : BaseObject, new()
         {
             Type typeKey = typeof(T1);
-            if (Stash.ContainsKey(typeKey))
+            if (_stash.ContainsKey(typeKey))
             {
-                T2? obj = Stash[typeKey].RetrieveObject<T2>();
+                T2? obj = _stash[typeKey].RetrieveObject<T2>();
                 if (obj is null)
                 {
                     obj = new T2();
