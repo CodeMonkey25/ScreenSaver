@@ -7,11 +7,12 @@ namespace ScreenSaver.Game.Objects
 {
     public abstract class BaseObject : ReactiveObject, IDisposable
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
         public int Z { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
+        public bool RequestDelete { get; set; }
 
         public virtual void Initialize(Jeeves jeeves) { }
         

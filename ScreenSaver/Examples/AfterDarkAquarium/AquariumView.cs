@@ -37,12 +37,23 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             LoadBitmaps(jeeves, bitmaps);
             
             Add(jeeves.RetrieveObject<AquariumView, SeaFloor>());
+            // Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
+            // Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
         }
 
         public override void UnloadContent(Jeeves jeeves)
         {
             base.UnloadContent(jeeves);
             jeeves.CleanUp<AquariumView>();
+        }
+
+        public override bool Update(Jeeves jeeves)
+        {
+            if (jeeves.Random.Next(0, 500) == 0)
+            {
+                Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
+            }
+            return base.Update(jeeves);
         }
 
         private void LoadBitmaps<T>(Jeeves jeeves, IEnumerable<(T key, string fileName)> bitmaps ) where T : Enum

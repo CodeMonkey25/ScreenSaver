@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using ScreenSaver.Examples.AfterDarkAquarium;
 using ScreenSaver.Game.Engines;
 
 namespace ScreenSaver.ViewModels
@@ -14,11 +15,13 @@ namespace ScreenSaver.ViewModels
 
         public MainWindowViewModel()
         {
+            Engine = new ReactiveEngine();
             this.WhenActivated(
                 disposables =>
                 {
                     ToggleFullScreenCommand = ReactiveCommand.Create(() => { IsFullScreen = !IsFullScreen; }).DisposeWith(disposables);
-                    Engine = new ReactiveEngine().DisposeWith(disposables);
+                    Engine.DisposeWith(disposables);
+                    // Engine.SwitchGameState(new AquariumView());
                 }
             );
         }

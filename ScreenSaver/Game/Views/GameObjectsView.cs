@@ -10,12 +10,12 @@ namespace ScreenSaver.Game.Views
         
         public override bool Update(Jeeves jeeves)
         {
-            base.Update(jeeves);
-
+            bool needRedraw = base.Update(jeeves);
+            
             _gameObjects.Width = jeeves.ScreenWidth;
             _gameObjects.Height = jeeves.ScreenHeight;
             
-            return _gameObjects.Update(jeeves);
+            return _gameObjects.Update(jeeves) || needRedraw;
         }
 
         public override void Draw(SKCanvas canvas)

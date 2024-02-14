@@ -28,7 +28,7 @@ namespace ScreenSaver.Game.Engines
         [Reactive] public int Width { get; set; }
         [Reactive] public int Height { get; set; }
 
-        [Reactive] protected GameView CurrentGameView { get; set; } = new AquariumView(); // NullGameView.Instance;
+        [Reactive] public GameView CurrentGameView { get; set; } = NullGameView.Instance;
         [Reactive] public SKImage? Image { get; protected set; }
         
         protected CompositeDisposable Disposables { get; } = new();
@@ -118,5 +118,11 @@ namespace ScreenSaver.Game.Engines
             }
         }
         #endregion
+
+        public void UpdateSize(int width, int height)
+        {
+            Jeeves.ScreenWidth = Width = width;
+            Jeeves.ScreenHeight = Height = height;
+        }
     }
 }

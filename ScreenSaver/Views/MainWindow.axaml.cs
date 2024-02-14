@@ -7,7 +7,9 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using ReactiveUI;
+using ScreenSaver.Examples.AfterDarkAquarium;
 using ScreenSaver.Game.Engines;
+using ScreenSaver.Game.Views;
 using ScreenSaver.ViewModels;
 
 namespace ScreenSaver.Views
@@ -79,9 +81,13 @@ namespace ScreenSaver.Views
                     {
                         return;
                     }
-
-                    engine.Width = (int)rect.Width;
-                    engine.Height = (int)rect.Height;
+                    
+                    engine.UpdateSize((int)rect.Width, (int)rect.Height);
+                    
+                    if (engine.CurrentGameView == NullGameView.Instance)
+                    {
+                        engine.SwitchGameState(new AquariumView());
+                    }
                 })
                 .Subscribe()
                 .DisposeWith(disposables);

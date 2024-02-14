@@ -14,6 +14,7 @@ namespace ScreenSaver.Game.Engines
         public int ParentWidth { get; set; }
         public int ParentHeight { get; set; }
         public TimeSpan ElapsedGameTime { get; set; }
+        public Random Random { get; } = new Random();
 
         private readonly Dictionary<Type, ViewStash> Stash = new();
 

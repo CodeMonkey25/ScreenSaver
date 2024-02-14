@@ -30,12 +30,19 @@ namespace ScreenSaver.Game.Objects
         {
             bool result = base.Update(jeeves);
 
-            foreach (BaseObject gameObject in _gameObjects.SelectMany(go => go))
+            foreach (BaseObject gameObject in _gameObjects.SelectMany(go => go).ToList())
             {
                 jeeves.ParentWidth = Width;
                 jeeves.ParentHeight = Height;
+                
                 if (gameObject.Update(jeeves))
                     result = true;
+                
+                if (gameObject.RequestDelete)
+                {
+                    Remove(gameObject);
+                    gameObject.Dispose();
+                }
             }
 
             return result;
