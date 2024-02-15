@@ -19,21 +19,28 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
         {
             base.LoadContent(jeeves);
 
-            IEnumerable<(eAquariumKeys key, string fileName)> bitmaps = new[]
-            {
-                (eAquariumKeys.SeaFloor, "seafloor.jpg"),
-                (eAquariumKeys.Bubbles, "bubbles_50.png"),
-                (eAquariumKeys.ButterflyFish, "fish-butterfly.png"),
-                (eAquariumKeys.GuppyFish, "fish-guppy.png"),
-                (eAquariumKeys.SeahorseFish, "fish-seahorse.png"),
-                (eAquariumKeys.JellyFish, "fish-jelly.png"),
-                (eAquariumKeys.MinnowFish, "fish-minnow.png"),
-                (eAquariumKeys.RedFish, "fish-red.png"),
-                (eAquariumKeys.StripedFish, "fish-striped.png"),
-                (eAquariumKeys.AngelFish, "fish-angel.png"),
-                (eAquariumKeys.FlounderFish, "fish-flounder.png"),
-            };
-            LoadBitmaps(jeeves, bitmaps);
+            LoadBitmap(jeeves, eAquariumKeys.SeaFloor, "seafloor.jpg");
+            
+            LoadSprites(jeeves, eAquariumKeys.Bubbles, "bubbles_50.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.ButterflyFish, "fish-butterfly.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.GuppyFish, "fish-guppy.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.SeahorseFish, "fish-seahorse.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.JellyFish, "fish-jelly.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.MinnowFish, "fish-minnow.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.RedFish, "fish-red.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.StripedFish, "fish-striped.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.AngelFish, "fish-angel.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.FlounderFish, "fish-flounder.png", 2);
+
+            LoadFlippedSprites(jeeves, eAquariumKeys.ButterflyFishFlipped, "fish-butterfly.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.GuppyFishFlipped, "fish-guppy.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.SeahorseFishFlipped, "fish-seahorse.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.JellyFishFlipped, "fish-jelly.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.MinnowFishFlipped, "fish-minnow.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.RedFishFlipped, "fish-red.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.StripedFishFlipped, "fish-striped.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.AngelFishFlipped, "fish-angel.png", 2);
+            LoadFlippedSprites(jeeves, eAquariumKeys.FlounderFishFlipped, "fish-flounder.png", 2);
             
             Add(jeeves.RetrieveObject<AquariumView, SeaFloor>());
         }
@@ -46,27 +53,78 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
 
         public override bool Update(Jeeves jeeves)
         {
-            if (jeeves.Random.Next(0, 500) == 0)
+            switch (jeeves.Random.Next(1000))
             {
-                Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
-            }
-            if (jeeves.Random.Next(0, 250) == 0)
-            {
-                Add(jeeves.RetrieveObject<AquariumView, Fish>());
+                case < 2:
+                    Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
+                    break;
+                case < 5:
+                    Add(jeeves.RetrieveObject<AquariumView, Fish>());
+                    break;
             }
             return base.Update(jeeves);
         }
 
-        private void LoadBitmaps<T>(Jeeves jeeves, IEnumerable<(T key, string fileName)> bitmaps ) where T : Enum
+        private void LoadBitmap<T>(Jeeves jeeves, T key, string fileName) where T : Enum
         {
             string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
-            foreach ((T key, string fileName) in bitmaps)
+            jeeves.AddBitmap<AquariumView, T>(key, SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))));
+        }
+
+        private void LoadSprites<T>(Jeeves jeeves, T key, string fileName, int count) where T : Enum
+        {
+            string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
+
+            using (SKBitmap bitmap = SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))))
             {
-                jeeves.AddBitmap<AquariumView, T>(
-                    key, 
-                    SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}")))
-                );
+                SKImage[] images = ExtractSprites(bitmap, count);
+                jeeves.AddSprite<AquariumView, T>(key, images);
             }
+        }
+
+        private void LoadFlippedSprites<T>(Jeeves jeeves, T key, string fileName, int count) where T : Enum
+        {
+            string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
+
+            using (SKBitmap bitmap = SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))))
+            using (SKBitmap flippedBitmap = FlipBitmap(bitmap))
+            {
+                SKImage[] images = ExtractSprites(flippedBitmap, count);
+                jeeves.AddSprite<AquariumView, T>(key, images);
+            }
+        }
+
+        private static SKImage[] ExtractSprites(SKBitmap bitmap, int count)
+        {
+            SKImage[] images = new SKImage[count];
+
+            int width = bitmap.Width / count;
+            int height = bitmap.Height;
+            for (int i = 0; i < count; i++)
+            {
+                int left = i * width;
+                int right = left + width;
+                using (SKPixmap pixmap = new SKPixmap(bitmap.Info, bitmap.GetPixels()))
+                using (SKPixmap subset = pixmap.ExtractSubset(new SKRectI(left, 0, right, height)))
+                using (SKData data = subset.Encode(SKPngEncoderOptions.Default))
+                {
+                    images[i] = SKImage.FromEncodedData(data);
+                }
+            }
+
+            return images;
+        }
+
+        private static SKBitmap FlipBitmap(SKBitmap bitmap)
+        {
+            SKBitmap flippedBitmap = new SKBitmap(bitmap.Width, bitmap.Height);
+            using (SKCanvas canvas = new SKCanvas(flippedBitmap))
+            {
+                canvas.Clear();
+                canvas.Scale(-1, 1, bitmap.Width / 2, 0);
+                canvas.DrawBitmap(bitmap, new SKPoint());
+            }
+            return flippedBitmap;
         }
     }
 }

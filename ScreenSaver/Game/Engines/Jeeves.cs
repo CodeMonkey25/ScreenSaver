@@ -81,5 +81,27 @@ namespace ScreenSaver.Game.Engines
 
             throw new GameException($"Unknown game object for View {typeKey.Name} - Object {typeof(T2)}");
         }
+
+        public void AddSprite<T, TEnum>(TEnum key, SKImage[] images) where TEnum : Enum
+        {
+            Type typeKey = typeof(T);
+            if (!_stash.ContainsKey(typeKey))
+            {
+                _stash.Add(typeKey, new ViewStash());
+            }
+
+            _stash[typeKey].AddSprite(key, images);
+        }
+ 
+        public SKImage[] RetrieveSprite<T1, T2>(T2 key) where T1 : GameView where T2 : Enum
+        {
+            Type typeKey = typeof(T1);
+            if (_stash.ContainsKey(typeKey))
+            {
+                return _stash[typeKey].RetrieveSprite(key);
+            }
+
+            throw new GameException($"Unknown sprite for View {typeKey.Name} - Key {key}");
+        }
     }
 }

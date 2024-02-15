@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ReactiveUI;
+using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Objects;
 using SkiaSharp;
 
@@ -10,6 +11,7 @@ namespace ScreenSaver.Game.Views
     public class ViewStash : ReactiveObject, IDisposable
     {
         private readonly Dictionary<Enum, SKBitmap> _bitmaps = new();
+        private readonly Dictionary<Enum, SKImage[]> _sprites = new();
         private readonly Dictionary<Type, Queue<BaseObject>> _baseObjects = new();
 
         public void Dispose()
@@ -19,6 +21,12 @@ namespace ScreenSaver.Game.Views
                 skBitmap.Dispose();
             }
             _bitmaps.Clear();
+
+            foreach (SKImage skImage in _sprites.Values.SelectMany(v => v))
+            {
+                skImage.Dispose();
+            }
+            _sprites.Clear();
         }
 
         public void AddBitmap<T>(T key, SKBitmap bitmap) where T : Enum
@@ -29,6 +37,16 @@ namespace ScreenSaver.Game.Views
         public SKBitmap RetrieveBitmap<T>(T key) where T : Enum
         {
             return _bitmaps[key];
+        }
+
+        public void AddSprite<TEnum>(TEnum key, SKImage[] images) where TEnum : Enum
+        {
+            _sprites[key] = images;
+        }
+
+        public SKImage[] RetrieveSprite<T>(T key) where T : Enum
+        {
+            return _sprites[key];
         }
 
         public void StoreObject<T>(T obj) where T : BaseObject

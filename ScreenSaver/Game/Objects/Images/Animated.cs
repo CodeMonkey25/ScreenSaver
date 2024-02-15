@@ -6,7 +6,7 @@ namespace ScreenSaver.Game.Objects.Images
 {
     public class Animated : BaseObject
     {
-        private SKImage[] _images = Array.Empty<SKImage>();
+        protected SKImage[] Images = Array.Empty<SKImage>();
         private int _index = 0;
         protected int SpriteCounterMax { get; set; } = 1000;
         private int _spriteCounter = 0;
@@ -14,44 +14,11 @@ namespace ScreenSaver.Game.Objects.Images
         protected int SpeedX { get; set; } = 0;
         protected int SpeedY { get; set; } = 0;
 
-        public override void Initialize(Jeeves jeeves)
-        {
-            base.Initialize(jeeves);
-        }
-
-        public void ExtractSprites(SKBitmap bitmap, int count)
-        {
-            _images = new SKImage[count];
-
-            int width = bitmap.Width / count;
-            int height = bitmap.Height;
-            for (int i = 0; i < count; i++)
-            {
-                int left = i * width;
-                int right = left + width;
-                using (SKPixmap pixmap = new SKPixmap(bitmap.Info, bitmap.GetPixels()))
-                using (SKPixmap subset = pixmap.ExtractSubset(new SKRectI(left, 0, right, height)))
-                using (SKData data = subset.Encode(SKPngEncoderOptions.Default))
-                {
-                    _images[i] = SKImage.FromEncodedData(data);
-                }
-            }
-        }
-        
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            foreach (SKImage skImage in _images)
-            {
-                skImage.Dispose();
-            }
-        }
-        
         public override bool Update(Jeeves jeeves)
         {
             bool needRedraw = base.Update(jeeves);
         
-            if (_index >= 0 && _index < _images.Length)
+            if (_index >= 0 && _index < Images.Length)
             {
                 
                 float deltaX = SpeedX * (float)jeeves.ElapsedGameTime.TotalSeconds;
@@ -72,15 +39,15 @@ namespace ScreenSaver.Game.Objects.Images
                 if (_spriteCounter > SpriteCounterMax)
                 {
                     _index++;
-                    if (_index >= _images.Length) _index = 0;
+                    if (_index >= Images.Length) _index = 0;
                     _spriteCounter %= SpriteCounterMax;
                     needRedraw = true;
                 }
 
                 float imageTop = Y;
-                float imageBottom = Y + _images[_index].Height;
+                float imageBottom = Y + Images[_index].Height;
                 float imageLeft = X;
-                float imageRight = X + _images[_index].Width;
+                float imageRight = X + Images[_index].Width;
                 if (imageTop > jeeves.ParentHeight || imageBottom < 0 || imageLeft > jeeves.ParentWidth || imageRight < 0)
                 {
                     RequestDelete = true;
@@ -94,9 +61,9 @@ namespace ScreenSaver.Game.Objects.Images
         public override void Draw(SKCanvas canvas)
         {
             base.Draw(canvas);
-            if (_index >= _images.Length) return;
+            if (_index >= Images.Length) return;
             
-            canvas.DrawImage(_images[_index], X, Y);
+            canvas.DrawImage(Images[_index], X, Y);
         }
     }
 }
