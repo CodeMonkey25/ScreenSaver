@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using ReactiveUI;
 using ScreenSaver.Game.Objects;
 using ScreenSaver.Game.Views;
@@ -16,92 +15,56 @@ namespace ScreenSaver.Game.Engines
         public TimeSpan ElapsedGameTime { get; set; }
         public Random Random { get; } = new Random();
 
-        private readonly Dictionary<Type, ViewStash> _stash = new();
+        private readonly ViewStash _stash = new();
 
         public void Dispose()
         {
-            foreach (IDisposable viewStash in _stash.Values)
-            {
-                viewStash.Dispose();
-            }
-            _stash.Clear();
+            _stash.Dispose();
         }
         
         public void Prepare<T1>() where T1 : GameView
         {
-            _stash.Add(typeof(T1), new ViewStash());
         }
         
         public void CleanUp<T>() where T : GameView
         {
-            Type typeKey = typeof(T);
-            if (_stash.ContainsKey(typeKey))
-            {
-                _stash[typeKey].Dispose();
-                _stash.Remove(typeKey);
-            }
+        }
+
+        public void StoreObject(BaseObject obj)
+        {
+            _stash.StoreObject(obj);
         }
         
-        public void AddBitmap<T1, T2>(T2 key, SKBitmap bitmap) where T1 : GameView where T2 : Enum
+        public T RetrieveObject<T>() where T : BaseObject, new()
         {
-            Type typeKey = typeof(T1);
-            if (!_stash.ContainsKey(typeKey))
+            T? obj = _stash.RetrieveObject<T>();
+            if (obj is null)
             {
-                _stash.Add(typeKey, new ViewStash());
+                obj = new T();
             }
+            obj.Initialize(this);
 
-            _stash[typeKey].AddBitmap(key, bitmap);
+            return obj;
+        }
+        
+        public void AddBitmap<TEnum>(TEnum key, SKBitmap bitmap) where TEnum : Enum
+        {
+            _stash.AddBitmap(key, bitmap);
         }
 
-        public SKBitmap RetrieveBitmap<T1, T2>(T2 key) where T1 : GameView where T2 : Enum
+        public SKBitmap RetrieveBitmap<TEnum>(TEnum key) where TEnum : Enum
         {
-            Type typeKey = typeof(T1);
-            if (_stash.ContainsKey(typeKey))
-            {
-                return _stash[typeKey].RetrieveBitmap(key);
-            }
-
-            throw new GameException($"Unknown bitmap for View {typeKey.Name} - Key {key}");
+            return _stash.RetrieveBitmap(key);
         }
 
-        public T2 RetrieveObject<T1, T2>() where T1 : GameView where T2 : BaseObject, new()
+        public void AddSprite<TEnum>(TEnum key, SKImage[] images) where TEnum : Enum
         {
-            Type typeKey = typeof(T1);
-            if (_stash.ContainsKey(typeKey))
-            {
-                T2? obj = _stash[typeKey].RetrieveObject<T2>();
-                if (obj is null)
-                {
-                    obj = new T2();
-                    obj.Initialize(this);
-                }
-
-                return obj;
-            }
-
-            throw new GameException($"Unknown game object for View {typeKey.Name} - Object {typeof(T2)}");
-        }
-
-        public void AddSprite<T, TEnum>(TEnum key, SKImage[] images) where TEnum : Enum
-        {
-            Type typeKey = typeof(T);
-            if (!_stash.ContainsKey(typeKey))
-            {
-                _stash.Add(typeKey, new ViewStash());
-            }
-
-            _stash[typeKey].AddSprite(key, images);
+            _stash.AddSprite(key, images);
         }
  
-        public SKImage[] RetrieveSprite<T1, T2>(T2 key) where T1 : GameView where T2 : Enum
+        public SKImage[] RetrieveSprite<TEnum>(TEnum key) where TEnum : Enum
         {
-            Type typeKey = typeof(T1);
-            if (_stash.ContainsKey(typeKey))
-            {
-                return _stash[typeKey].RetrieveSprite(key);
-            }
-
-            throw new GameException($"Unknown sprite for View {typeKey.Name} - Key {key}");
+            return _stash.RetrieveSprite(key);
         }
     }
 }

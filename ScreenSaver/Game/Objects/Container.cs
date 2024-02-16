@@ -41,7 +41,8 @@ namespace ScreenSaver.Game.Objects
                 if (gameObject.RequestDelete)
                 {
                     Remove(gameObject);
-                    gameObject.Dispose();
+                    // gameObject.Dispose();
+                    jeeves.StoreObject(gameObject);
                 }
             }
 

@@ -9,7 +9,7 @@ public class Bubbles : Animated
     {
         base.Initialize(jeeves);
         SpriteCounterMax = jeeves.Random.Next(800, 1200);
-        Images = jeeves.RetrieveSprite<AquariumView, eAquariumKeys>(eAquariumKeys.Bubbles);
+        Images = jeeves.RetrieveSprite(eAquariumKeys.Bubbles);
 
         SpeedY = -25;
         Y = jeeves.ScreenHeight - 10;

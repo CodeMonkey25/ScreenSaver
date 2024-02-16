@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Avalonia.Platform;
 using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Views;
@@ -22,6 +21,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             LoadBitmap(jeeves, eAquariumKeys.SeaFloor, "seafloor.jpg");
             
             LoadSprites(jeeves, eAquariumKeys.Bubbles, "bubbles_50.png", 2);
+           
             LoadSprites(jeeves, eAquariumKeys.ButterflyFish, "fish-butterfly.png", 2);
             LoadSprites(jeeves, eAquariumKeys.GuppyFish, "fish-guppy.png", 2);
             LoadSprites(jeeves, eAquariumKeys.SeahorseFish, "fish-seahorse.png", 2);
@@ -42,7 +42,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             LoadFlippedSprites(jeeves, eAquariumKeys.AngelFishFlipped, "fish-angel.png", 2);
             LoadFlippedSprites(jeeves, eAquariumKeys.FlounderFishFlipped, "fish-flounder.png", 2);
             
-            Add(jeeves.RetrieveObject<AquariumView, SeaFloor>());
+            Add(jeeves.RetrieveObject<SeaFloor>());
         }
 
         public override void UnloadContent(Jeeves jeeves)
@@ -56,10 +56,10 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             switch (jeeves.Random.Next(1000))
             {
                 case < 2:
-                    Add(jeeves.RetrieveObject<AquariumView, Bubbles>());
+                    Add(jeeves.RetrieveObject<Bubbles>());
                     break;
                 case < 5:
-                    Add(jeeves.RetrieveObject<AquariumView, Fish>());
+                    Add(jeeves.RetrieveObject<Fish>());
                     break;
             }
             return base.Update(jeeves);
@@ -68,7 +68,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
         private void LoadBitmap<T>(Jeeves jeeves, T key, string fileName) where T : Enum
         {
             string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
-            jeeves.AddBitmap<AquariumView, T>(key, SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))));
+            jeeves.AddBitmap(key, SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))));
         }
 
         private void LoadSprites<T>(Jeeves jeeves, T key, string fileName, int count) where T : Enum
@@ -78,7 +78,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             using (SKBitmap bitmap = SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))))
             {
                 SKImage[] images = ExtractSprites(bitmap, count);
-                jeeves.AddSprite<AquariumView, T>(key, images);
+                jeeves.AddSprite(key, images);
             }
         }
 
@@ -90,7 +90,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             using (SKBitmap flippedBitmap = FlipBitmap(bitmap))
             {
                 SKImage[] images = ExtractSprites(flippedBitmap, count);
-                jeeves.AddSprite<AquariumView, T>(key, images);
+                jeeves.AddSprite(key, images);
             }
         }
 

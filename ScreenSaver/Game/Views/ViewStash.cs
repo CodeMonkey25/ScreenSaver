@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ReactiveUI;
-using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Objects;
 using SkiaSharp;
 
@@ -49,9 +48,9 @@ namespace ScreenSaver.Game.Views
             return _sprites[key];
         }
 
-        public void StoreObject<T>(T obj) where T : BaseObject
+        public void StoreObject(BaseObject obj)
         {
-            Type typeKey = typeof(T);
+            Type typeKey = obj.GetType();
             if (!_baseObjects.ContainsKey(typeKey))
             {
                 _baseObjects.Add(typeKey, new Queue<BaseObject>());

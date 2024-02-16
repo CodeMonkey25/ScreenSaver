@@ -14,7 +14,10 @@ namespace ScreenSaver.Game.Objects
         public int Height { get; set; }
         public bool RequestDelete { get; set; }
 
-        public virtual void Initialize(Jeeves jeeves) { }
+        public virtual void Initialize(Jeeves jeeves)
+        {
+            RequestDelete = false;
+        }
         
         public virtual bool Update(Jeeves jeeves) { return false; }
 

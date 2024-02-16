@@ -8,7 +8,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
         public override void Initialize(Jeeves jeeves)
         {
             base.Initialize(jeeves);
-            Bitmap = jeeves.RetrieveBitmap<AquariumView, eAquariumKeys>(eAquariumKeys.SeaFloor);
+            Bitmap = jeeves.RetrieveBitmap(eAquariumKeys.SeaFloor);
         }
     }
 }

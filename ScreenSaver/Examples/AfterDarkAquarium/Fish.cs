@@ -37,6 +37,6 @@ public class Fish : Animated
             X = jeeves.ScreenWidth - 10;
             key = AquariumFlippedKeys[i];
         }
-        Images = jeeves.RetrieveSprite<AquariumView, eAquariumKeys>(key);
+        Images = jeeves.RetrieveSprite(key);
     }
 }
