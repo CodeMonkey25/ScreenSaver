@@ -12,12 +12,12 @@ namespace ScreenSaver.Views
 {
     public class SkiaImageView : ReactiveUserControl<SkiaImageViewModel>
     {
-        public static readonly StyledProperty<SKImage?> SourceImageProperty = AvaloniaProperty.Register<SkiaImageView, SKImage?>("SourceImage");
+        public static readonly StyledProperty<SKBitmap?> SourceBitmapProperty = AvaloniaProperty.Register<SkiaImageView, SKBitmap?>(nameof(SourceBitmap));
 
-        public SKImage? SourceImage
+        public SKBitmap? SourceBitmap
         {
-            get => GetValue(SourceImageProperty);
-            set => SetValue(SourceImageProperty, value);
+            get => GetValue(SourceBitmapProperty);
+            set => SetValue(SourceBitmapProperty, value);
         }
         
         public SkiaImageView()
@@ -28,7 +28,7 @@ namespace ScreenSaver.Views
         public override void Render(DrawingContext context)
         {
             // Render elements
-            context.Custom(new ElementRenderOperation(new Rect(0, 0, Bounds.Width, Bounds.Height), SourceImage));
+            context.Custom(new ElementRenderOperation(new Rect(0, 0, Bounds.Width, Bounds.Height), SourceBitmap));
             Dispatcher.UIThread.InvokeAsync(InvalidateVisual, DispatcherPriority.Background);
         }
         
@@ -37,10 +37,10 @@ namespace ScreenSaver.Views
             // private readonly FormattedText _noEngine = new FormattedText("Current rendering API is not Skia", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 50, null);
             // private readonly IFormattedTextImpl _noImage = new FormattedText("No image has been provided", CultureInfo.CurrentCulture, FlowDirection.LeftToRight, Typeface.Default, 50, null).PlatformImpl;
 
-            public ElementRenderOperation(Rect bounds, SKImage? sourceImage)
+            public ElementRenderOperation(Rect bounds, SKBitmap? sourceBitmap)
             {
                 Bounds = bounds;
-                SourceImage = sourceImage;
+                SourceBitmap = sourceBitmap;
             }
 
             public void Dispose()
@@ -53,7 +53,7 @@ namespace ScreenSaver.Views
             /// </summary>
             public Rect Bounds { get; }
 
-            private SKImage? SourceImage { get; }
+            private SKBitmap? SourceBitmap { get; }
             public bool HitTest(Point p) => false;
             public bool Equals(ICustomDrawOperation? other) => false;
 
@@ -71,13 +71,13 @@ namespace ScreenSaver.Views
                     SKCanvas canvas = lease.SkCanvas;
                     canvas.Clear(SKColors.Black);
 
-                    if (SourceImage == null)
+                    if (SourceBitmap == null)
                     {
                         canvas.DrawText("No image has been provided", 0, 0, new SKPaint(new SKFont(SKTypeface.Default, 50)));
                         return;
                     }
 
-                    canvas.DrawImage(SourceImage, 0, 0);
+                    canvas.DrawBitmap(SourceBitmap, 0, 0);
                 }
             }
         }

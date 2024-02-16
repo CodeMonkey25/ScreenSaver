@@ -28,7 +28,7 @@ namespace ScreenSaver.Game.Engines
         [Reactive] public int Height { get; set; }
 
         [Reactive] public GameView CurrentGameView { get; set; } = NullGameView.Instance;
-        [Reactive] public SKImage? Image { get; protected set; }
+        [Reactive] public SKBitmap? Image { get; protected set; }
         
         protected CompositeDisposable Disposables { get; } = new();
         protected Jeeves Jeeves { get; } = new();
@@ -90,14 +90,17 @@ namespace ScreenSaver.Game.Engines
             }
         }
         
-        protected void Render(SKBitmap bitmap)
+        protected SKBitmap? Render(SKBitmap bitmap)
         {
             using (SKCanvas canvas = new(bitmap))
             {
                 canvas.Clear(SKColors.Black);
                 CurrentGameView.Draw(canvas);
-                Image = SKImage.FromBitmap(bitmap);
             }
+
+            SKBitmap? old = Image;
+            Image = bitmap;
+            return old;
         }
         #endregion
         

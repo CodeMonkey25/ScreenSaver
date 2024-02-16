@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ReactiveUI;
 using SkiaSharp;
 
@@ -51,7 +53,7 @@ namespace ScreenSaver.Game.Engines
         {
             foreach (SKBitmap freeBitmap in _freeBitmaps)
             {
-                freeBitmap.Dispose();
+                freeBitmap?.Dispose();
             }
             _freeBitmaps.Clear();
             
@@ -71,8 +73,17 @@ namespace ScreenSaver.Game.Engines
             if (CurrentGameView.Update(Jeeves))
             {
                 SKBitmap bitmap = GetBitmap();
-                Render(bitmap);
-                ReleaseBitmap(bitmap);
+                SKBitmap? old = Render(bitmap);
+                if (old != null)
+                {
+                    // if we reuse the bitmap too soon, it seems to cause a flicker on the screen, so I added this delay
+                    Task.Run(() =>
+                    {
+                        SKBitmap old2 = old;
+                        Thread.Sleep(50);
+                        ReleaseBitmap(old2);
+                    });
+                }
             }
         }
 
