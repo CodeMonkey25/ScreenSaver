@@ -30,6 +30,6 @@ public class Fish : Animated
         Images = jeeves.RetrieveSprite(key);
         SpeedX = jeeves.Random.Next(10, 50) * (isFlipped ? -1 : 1);
         X = isFlipped ? jeeves.ScreenWidth - 1 : 1 - Images.First().Width;
-        Y = jeeves.Random.Next(10, jeeves.ScreenHeight - Images.First().Height);
+        Y = jeeves.Random.Next(0, jeeves.ScreenHeight - Images.First().Height);
     }
 }
