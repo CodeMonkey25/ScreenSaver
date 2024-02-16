@@ -1,3 +1,4 @@
+using System.Linq;
 using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Objects.Images;
 
@@ -23,20 +24,12 @@ public class Fish : Animated
         base.Initialize(jeeves);
 
         SpriteCounterMax = jeeves.Random.Next(800, 1200);
-
+        bool isFlipped = jeeves.Random.Next(0, 2) == 0;
         int i = jeeves.Random.Next(0, AquariumKeys.Length);
-        eAquariumKeys key = AquariumKeys[i];
-        
-        SpeedX = jeeves.Random.Next(10, 50);
-        X = 10;
-        Y = jeeves.Random.Next(10, jeeves.ScreenHeight - 10);
-
-        if (jeeves.Random.Next(0, 2) == 0)
-        {
-            SpeedX *= -1;
-            X = jeeves.ScreenWidth - 10;
-            key = AquariumFlippedKeys[i];
-        }
+        eAquariumKeys key = isFlipped ? AquariumFlippedKeys[i] : AquariumKeys[i];
         Images = jeeves.RetrieveSprite(key);
+        SpeedX = jeeves.Random.Next(10, 50) * (isFlipped ? -1 : 1);
+        X = isFlipped ? jeeves.ScreenWidth - 1 : 1 - Images.First().Width;
+        Y = jeeves.Random.Next(10, jeeves.ScreenHeight - Images.First().Height);
     }
 }
