@@ -18,6 +18,8 @@ namespace ScreenSaver.Game.Objects
         {
             RequestDelete = false;
         }
+
+        public virtual void CleanUp() { }
         
         public virtual bool Update(Jeeves jeeves) { return false; }
 

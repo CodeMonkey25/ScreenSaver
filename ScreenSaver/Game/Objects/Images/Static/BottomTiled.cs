@@ -9,6 +9,12 @@ namespace ScreenSaver.Game.Objects.Images.Static
         
         private int _parentWidth, _parentHeight;
 
+        public override void CleanUp()
+        {
+            base.CleanUp();
+            Bitmap = null;
+        }
+
         public override bool Update(Jeeves jeeves)
         {
             bool needUpdate = base.Update(jeeves);
@@ -44,7 +50,7 @@ namespace ScreenSaver.Game.Objects.Images.Static
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            Bitmap?.Dispose();
+            Bitmap = null;
         }
     }
 }
