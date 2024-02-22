@@ -14,6 +14,7 @@ namespace ScreenSaver.Game.Engines
         public int ParentHeight { get; set; }
         public TimeSpan ElapsedGameTime { get; set; }
         public Random Random { get; } = new Random();
+        public bool CacheEnabled { get; set; } = true;
 
         private readonly ViewStash _stash = new();
 
@@ -32,9 +33,12 @@ namespace ScreenSaver.Game.Engines
 
         public void StoreObject(BaseObject obj)
         {
-            _stash.StoreObject(obj);
+            if (CacheEnabled)
+                _stash.StoreObject(obj);
+            else
+                obj.Dispose();
         }
-        
+
         public T RetrieveObject<T>() where T : BaseObject, new()
         {
             T? obj = _stash.RetrieveObject<T>();

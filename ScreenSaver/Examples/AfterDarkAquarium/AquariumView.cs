@@ -18,6 +18,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
         public override void LoadContent(Jeeves jeeves)
         {
             base.LoadContent(jeeves);
+            jeeves.CacheEnabled = false;
 
             LoadBitmap(jeeves, eAquariumKeys.SeaFloor, "seafloor.jpg");
             

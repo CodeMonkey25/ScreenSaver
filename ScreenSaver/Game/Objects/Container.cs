@@ -42,8 +42,9 @@ namespace ScreenSaver.Game.Objects
                 {
                     Remove(gameObject);
                     gameObject.CleanUp();
-                    gameObject.Dispose();
-                    // jeeves.StoreObject(gameObject);
+                    
+                    // if cache is disabled, the object will be disposed
+                    jeeves.StoreObject(gameObject);
                 }
             }
 
