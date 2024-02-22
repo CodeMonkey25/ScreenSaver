@@ -4,6 +4,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
     {
         SeaFloor,
         Bubbles,
+        BubblesFlipped,
         ButterflyFish,
         ButterflyFishFlipped,
         GuppyFish,
@@ -22,5 +23,7 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
         AngelFishFlipped,
         FlounderFish,
         FlounderFishFlipped,
+        Scuba,
+        ScubaFlipped,
     }
 }

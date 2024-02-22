@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Avalonia.Platform;
 using ScreenSaver.Game.Engines;
 using ScreenSaver.Game.Views;
@@ -20,28 +21,19 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
 
             LoadBitmap(jeeves, eAquariumKeys.SeaFloor, "seafloor.jpg");
             
-            LoadSprites(jeeves, eAquariumKeys.Bubbles, "bubbles_50.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.Bubbles, eAquariumKeys.BubblesFlipped, "bubbles_50.png", 2, 1, 2);
            
-            LoadSprites(jeeves, eAquariumKeys.ButterflyFish, "fish-butterfly.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.GuppyFish, "fish-guppy.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.SeahorseFish, "fish-seahorse.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.JellyFish, "fish-jelly.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.MinnowFish, "fish-minnow.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.RedFish, "fish-red.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.StripedFish, "fish-striped.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.AngelFish, "fish-angel.png", 2);
-            LoadSprites(jeeves, eAquariumKeys.FlounderFish, "fish-flounder.png", 2);
+            LoadSprites(jeeves, eAquariumKeys.ButterflyFish, eAquariumKeys.ButterflyFishFlipped, "fish-butterfly.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.GuppyFish, eAquariumKeys.GuppyFishFlipped, "fish-guppy.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.SeahorseFish, eAquariumKeys.SeahorseFishFlipped, "fish-seahorse.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.JellyFish, eAquariumKeys.JellyFishFlipped, "fish-jelly.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.MinnowFish, eAquariumKeys.MinnowFishFlipped, "fish-minnow.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.RedFish, eAquariumKeys.RedFishFlipped, "fish-red.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.StripedFish, eAquariumKeys.StripedFishFlipped, "fish-striped.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.AngelFish, eAquariumKeys.AngelFishFlipped, "fish-angel.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.FlounderFish, eAquariumKeys.FlounderFishFlipped, "fish-flounder.png", 2, 1, 2);
+            LoadSprites(jeeves, eAquariumKeys.Scuba, eAquariumKeys.ScubaFlipped, "scuba.png", 10, 3, 4);
 
-            LoadFlippedSprites(jeeves, eAquariumKeys.ButterflyFishFlipped, "fish-butterfly.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.GuppyFishFlipped, "fish-guppy.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.SeahorseFishFlipped, "fish-seahorse.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.JellyFishFlipped, "fish-jelly.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.MinnowFishFlipped, "fish-minnow.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.RedFishFlipped, "fish-red.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.StripedFishFlipped, "fish-striped.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.AngelFishFlipped, "fish-angel.png", 2);
-            LoadFlippedSprites(jeeves, eAquariumKeys.FlounderFishFlipped, "fish-flounder.png", 2);
-            
             Add(jeeves.RetrieveObject<SeaFloor>());
         }
 
@@ -53,12 +45,15 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
 
         public override bool Update(Jeeves jeeves)
         {
-            switch (jeeves.Random.Next(1000))
+            switch (jeeves.Random.Next(10000))
             {
-                case < 2:
+                case 0:
+                    Add(jeeves.RetrieveObject<Scuba>());
+                    break;
+                case < 20:
                     Add(jeeves.RetrieveObject<Bubbles>());
                     break;
-                case < 5:
+                case < 50:
                     Add(jeeves.RetrieveObject<Fish>());
                     break;
             }
@@ -71,48 +66,46 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             jeeves.AddBitmap(key, SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))));
         }
 
-        private void LoadSprites<T>(Jeeves jeeves, T key, string fileName, int count) where T : Enum
+        private void LoadSprites<T>(Jeeves jeeves, T key, T flippedKey, string fileName, int count, int rows, int columns) where T : Enum
         {
             string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
 
             using (SKBitmap bitmap = SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))))
             {
-                SKImage[] images = ExtractSprites(bitmap, count);
-                jeeves.AddSprite(key, images);
+                SKBitmap[] bitmaps = ExtractSprites(bitmap, count, rows, columns);
+                jeeves.AddSprite(key, bitmaps.Select(SKImage.FromBitmap).ToArray());
+                jeeves.AddSprite(flippedKey, bitmaps.Select(FlipBitmap).Select(SKImage.FromBitmap).ToArray());
+                foreach (SKBitmap skBitmap in bitmaps)
+                {
+                    skBitmap.Dispose();
+                }
             }
         }
 
-        private void LoadFlippedSprites<T>(Jeeves jeeves, T key, string fileName, int count) where T : Enum
+        private static SKBitmap[] ExtractSprites(SKBitmap bitmap, int count, int rows, int columns)
         {
-            string assemblyName = GetType().Assembly.GetName().Name ?? string.Empty;
+            SKBitmap[] bitmaps = new SKBitmap[count];
 
-            using (SKBitmap bitmap = SKBitmap.Decode(AssetLoader.Open(new Uri($"avares://{assemblyName}/Assets/{fileName}"))))
-            using (SKBitmap flippedBitmap = FlipBitmap(bitmap))
-            {
-                SKImage[] images = ExtractSprites(flippedBitmap, count);
-                jeeves.AddSprite(key, images);
-            }
-        }
-
-        private static SKImage[] ExtractSprites(SKBitmap bitmap, int count)
-        {
-            SKImage[] images = new SKImage[count];
-
-            int width = bitmap.Width / count;
-            int height = bitmap.Height;
+            int width = bitmap.Width / columns;
+            int height = bitmap.Height / rows;
             for (int i = 0; i < count; i++)
             {
-                int left = i * width;
+                int row = i / columns;
+                int col = i % columns;
+                int left = col * width;
                 int right = left + width;
+                int top = row * height;
+                int bottom = top + height;
+                
                 using (SKPixmap pixmap = new SKPixmap(bitmap.Info, bitmap.GetPixels()))
-                using (SKPixmap subset = pixmap.ExtractSubset(new SKRectI(left, 0, right, height)))
+                using (SKPixmap subset = pixmap.ExtractSubset(new SKRectI(left, top, right, bottom)))
                 using (SKData data = subset.Encode(SKPngEncoderOptions.Default))
                 {
-                    images[i] = SKImage.FromEncodedData(data);
+                    bitmaps[i] = SKBitmap.Decode(data);
                 }
             }
 
-            return images;
+            return bitmaps;
         }
 
         private static SKBitmap FlipBitmap(SKBitmap bitmap)
