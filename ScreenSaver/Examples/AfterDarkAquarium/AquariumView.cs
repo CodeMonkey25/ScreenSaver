@@ -74,11 +74,12 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             {
                 SKBitmap[] bitmaps = ExtractSprites(bitmap, count, rows, columns);
                 jeeves.AddSprite(key, bitmaps.Select(SKImage.FromBitmap).ToArray());
-                jeeves.AddSprite(flippedKey, bitmaps.Select(FlipBitmap).Select(SKImage.FromBitmap).ToArray());
-                foreach (SKBitmap skBitmap in bitmaps)
-                {
-                    skBitmap.Dispose();
-                }
+
+                SKBitmap[] flippedBitmaps = bitmaps.Select(FlipBitmap).ToArray();
+                jeeves.AddSprite(flippedKey, flippedBitmaps.Select(SKImage.FromBitmap).ToArray());
+                
+                foreach (SKBitmap skBitmap in bitmaps) { skBitmap.Dispose(); }
+                foreach (SKBitmap skBitmap in flippedBitmaps) { skBitmap.Dispose(); }
             }
         }
 
