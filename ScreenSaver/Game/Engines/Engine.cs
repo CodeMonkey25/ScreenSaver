@@ -18,7 +18,7 @@ namespace ScreenSaver.Game.Engines
         [Reactive] public ReactiveCommand<Unit, Unit> StopCommand { get; protected set; } = null!;
         [Reactive] public float TargetFrameRate { get; set; }
         [Reactive] public bool IsEnabled { get; set; }
-        [Reactive] public long Ticks { get; protected set; }
+        [Reactive] public ulong Ticks { get; protected set; }
         [Reactive] public float FPS { get; protected set; }
         [Reactive] public float MinFPS { get; protected set; }
         [Reactive] public float MaxFPS { get; protected set; }

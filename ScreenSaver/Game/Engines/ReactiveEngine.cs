@@ -14,7 +14,7 @@ namespace ScreenSaver.Game.Engines
     {
         private const int FPSSampleSize = 60;
         private readonly Queue<float> _rollingFPS = new(FPSSampleSize);
-        private readonly Queue<SKBitmap> _freeBitmaps = new();
+        private readonly Queue<SKBitmap?> _freeBitmaps = new();
         
         public ReactiveEngine()
         {
@@ -77,10 +77,10 @@ namespace ScreenSaver.Game.Engines
                 if (old != null)
                 {
                     // if we reuse the bitmap too soon, it seems to cause a flicker on the screen, so I added this delay
-                    Task.Run(() =>
+                    Task.Run(async () =>
                     {
                         SKBitmap old2 = old;
-                        Thread.Sleep(50);
+                        await Task.Delay(50);
                         ReleaseBitmap(old2);
                     });
                 }
@@ -91,7 +91,8 @@ namespace ScreenSaver.Game.Engines
         {
             while (_freeBitmaps.Any())
             {
-                SKBitmap bitmap = _freeBitmaps.Dequeue();
+                SKBitmap? bitmap = _freeBitmaps.Dequeue();
+                if (bitmap == null) continue;
                 if (bitmap.Width == Width && bitmap.Height == Height)
                     return bitmap;
                 bitmap.Dispose();
@@ -100,11 +101,12 @@ namespace ScreenSaver.Game.Engines
             return new SKBitmap(Width, Height);
         }
 
-        private void ReleaseBitmap(SKBitmap bitmap)
+        private void ReleaseBitmap(SKBitmap? bitmap)
         {
-            _freeBitmaps.Enqueue(bitmap);
+            if (bitmap != null)
+                _freeBitmaps.Enqueue(bitmap);
         }
-        
+
         private void UpdateStats(TimeSpan elapsedGameTime)
         {
             ++Ticks;
