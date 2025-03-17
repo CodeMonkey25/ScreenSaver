@@ -25,5 +25,17 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
         FlounderFishFlipped,
         Scuba,
         ScubaFlipped,
+        CartoonFishYellow,
+        CartoonFishYellowFlipped,
+        CartoonFishBlack,
+        CartoonFishBlackFlipped,
+        CartoonFishBlue,
+        CartoonFishBlueFlipped,
+        CartoonFishGreen,
+        CartoonFishGreenFlipped,
+        CartoonFishPurple,
+        CartoonFishPurpleFlipped,
+        CartoonFishRed,
+        CartoonFishRedFlipped,
     }
 }

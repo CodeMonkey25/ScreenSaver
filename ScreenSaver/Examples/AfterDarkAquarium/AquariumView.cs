@@ -34,7 +34,14 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
             LoadSprites(jeeves, eAquariumKeys.AngelFish, eAquariumKeys.AngelFishFlipped, "fish-angel.png", 2, 1, 2);
             LoadSprites(jeeves, eAquariumKeys.FlounderFish, eAquariumKeys.FlounderFishFlipped, "fish-flounder.png", 2, 1, 2);
             LoadSprites(jeeves, eAquariumKeys.Scuba, eAquariumKeys.ScubaFlipped, "scuba.png", 10, 3, 4);
-
+            
+            LoadSprites(jeeves, eAquariumKeys.CartoonFishYellow, eAquariumKeys.CartoonFishYellowFlipped, "__cartoon_fish_06_yellow_swim.png", 12, 3, 4);
+            LoadSprites(jeeves, eAquariumKeys.CartoonFishBlack, eAquariumKeys.CartoonFishBlackFlipped, "__cartoon_fish_06_black_swim.png", 12, 3, 4);
+            LoadSprites(jeeves, eAquariumKeys.CartoonFishBlue, eAquariumKeys.CartoonFishBlueFlipped, "__cartoon_fish_06_blue_swim.png", 12, 3, 4);
+            LoadSprites(jeeves, eAquariumKeys.CartoonFishGreen, eAquariumKeys.CartoonFishGreenFlipped, "__cartoon_fish_06_green_swim.png", 12, 3, 4);
+            LoadSprites(jeeves, eAquariumKeys.CartoonFishPurple, eAquariumKeys.CartoonFishPurpleFlipped, "__cartoon_fish_06_purple_swim.png", 12, 3, 4);
+            LoadSprites(jeeves, eAquariumKeys.CartoonFishRed, eAquariumKeys.CartoonFishRedFlipped, "__cartoon_fish_06_red_swim.png", 12, 3, 4);
+            
             Add(jeeves.RetrieveObject<SeaFloor>());
         }
 
@@ -53,6 +60,9 @@ namespace ScreenSaver.Examples.AfterDarkAquarium
                     break;
                 case < 20:
                     Add(jeeves.RetrieveObject<Bubbles>());
+                    break;
+                case < 25:
+                    Add(jeeves.RetrieveObject<CartoonFish>());
                     break;
                 case < 50:
                     Add(jeeves.RetrieveObject<Fish>());

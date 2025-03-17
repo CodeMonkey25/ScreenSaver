@@ -76,6 +76,7 @@ namespace ScreenSaver.Game.Engines
                 SKBitmap? old = Render(bitmap);
                 if (old != null)
                 {
+                    // ReleaseBitmap(old);
                     // if we reuse the bitmap too soon, it seems to cause a flicker on the screen, so I added this delay
                     Task.Run(async () =>
                     {
